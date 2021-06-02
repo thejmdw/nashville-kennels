@@ -11,6 +11,11 @@ import { EmployeeList } from "./employee/EmployeeList"
 import { AnimalForm } from "./animal/AnimalForm"
 import { EmployeeForm } from "./employee/EmployeeForm"
 import { LocationForm } from "./location/LocationForm"
+import { Animal } from "./animal/Animal"
+import { Employee } from "./employee/Employee"
+import { Location } from "./location/Location"
+import { Customer } from "./customer/Customer"
+
 
 
 export const ApplicationViews = () => {
@@ -29,7 +34,10 @@ export const ApplicationViews = () => {
           <Route exact path="/locations">
             <LocationList />
           </Route>
-          <Route path="/locations/create">
+          <Route exact path="/locations/detail/:locationId(\d+)">
+              <Location />
+            </Route>
+          <Route exact path="/locations/create">
               <LocationForm />
             </Route>
         </EmployeeProvider>
@@ -41,7 +49,10 @@ export const ApplicationViews = () => {
             <Route exact path="/animals">
               <AnimalList />
             </Route>
-            <Route path="/animals/create">
+            <Route exact path="/animals/detail/:animalId(\d+)">
+              <Animal />
+            </Route>
+            <Route exact path="/animals/create">
               <AnimalForm />
             </Route>
           </LocationProvider>
@@ -52,6 +63,9 @@ export const ApplicationViews = () => {
         <Route exact path="/customers">
           <CustomerList />
         </Route>
+        <Route exact path="/customers/detail/:customerId(\d+)">
+          <Customer />
+        </Route>
       </CustomerProvider>
 
       <EmployeeProvider>
@@ -59,7 +73,10 @@ export const ApplicationViews = () => {
           <Route exact path="/employees">
             <EmployeeList />
           </Route>
-          <Route path="/employees/create">
+          <Route exact path="/employees/detail/:employeeId(\d+)">
+              <Employee />
+            </Route>
+          <Route exact path="/employees/create">
             <EmployeeForm />
           </Route>
         </LocationProvider>
