@@ -1,7 +1,7 @@
 import React from "react"
 import { useContext, useEffect } from "react"
 import { AnimalContext } from "./AnimalProvider"
-import { useHistory } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 import "./Animal.css"
 
 export const AnimalList = () => {
@@ -20,32 +20,40 @@ export const AnimalList = () => {
 
     <>
       <h2>Animals</h2>
+      
       <button onClick = {
         () => history.push("/animals/create")
       }>
         Add Animal
       </button>
+      
       <section className="animals">
         {console.log("AnimalList: Render", animals)}
         {
-          animals.map(animal => {
-            return (
-              <div className="animal" id={`animal--${animal.id}`} key={animal.id}>
-                <h3 className="animal__name">
-                  { animal.name }
-                </h3>
-                <div className="animal__breed">
-                  <strong>Breed:</strong> { animal.breed }
-                </div>
-                <div className="animal__owner">
-                  <strong>Owner:</strong> {animal.customer.name}
-                </div>
-                <div className="animal__location">
-                  <strong>Location:</strong> {animal.location.name}
-                </div>
-              </div>
-            )
-          })
+          animals.map(animal => <div className="animal"><h3><Link to={`/animals/detail/${animal.id}`}>
+            {animal.name}
+          </Link></h3>
+          <div><strong>Breed:</strong> {animal.breed}</div></div>
+          )
+
+          // animals.map(animal => {
+          //   return (
+          //     <div className="animal" id={`animal--${animal.id}`} key={animal.id}>
+          //       <h3 className="animal__name">
+          //         { animal.name }
+          //       </h3>
+          //       <div className="animal__breed">
+          //         <strong>Breed:</strong> { animal.breed }
+          //       </div>
+          //       <div className="animal__owner">
+          //         <strong>Owner:</strong> {animal.customer.name}
+          //       </div>
+          //       <div className="animal__location">
+          //         <strong>Location:</strong> {animal.location.name}
+          //       </div>
+          //     </div>
+          //   )
+          // })
         }
       </section>
     </>
