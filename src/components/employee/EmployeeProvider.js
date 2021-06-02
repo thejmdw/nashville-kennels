@@ -14,7 +14,7 @@ export const EmployeeProvider = (props) => {
     .then(setEmployees)
   }
 
-  const addEmployee = () => {
+  const addEmployee = (employeeObj) => {
     return fetch("http://localhost:8088/employees", {
       method: "POST",
       headers: {
@@ -22,6 +22,7 @@ export const EmployeeProvider = (props) => {
       },
       body: JSON.stringify(employeeObj)
     })
+    .then(res => res.json())
     .then(getEmployees)
   }
 

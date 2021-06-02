@@ -1,4 +1,6 @@
 import React from "react"
+import { useContext, useEffect } from "react"
+import { CustomerContext } from "./CustomerProvider"
 import "./Customer.css"
 
 export const Customer = () => {
