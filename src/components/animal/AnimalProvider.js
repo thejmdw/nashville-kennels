@@ -9,12 +9,12 @@ export const AnimalProvider = (props) => {
   const [animals, setAnimals] = useState([])
 
   const getAnimals = () => {
-    return fetch("http://localhost:8088/animals?_expand=location&_expand=customer")
+    return fetch("http://localhost:8088/animals?_expand=location&_expand=customer&_sort=location.id")
     .then(res => res.json())
     .then(setAnimals)
   }
 
-  const addAnimal = () => {
+  const addAnimal = animalObj => {
     return fetch("http://localhost:8088/animals", {
       method: "POST",
       headers: {
@@ -22,6 +22,7 @@ export const AnimalProvider = (props) => {
       },
       body: JSON.stringify(animalObj)
     })
+    .then(res => res.json())
     .then(getAnimals)
   }
 
