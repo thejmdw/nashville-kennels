@@ -7,6 +7,7 @@ export const CustomerContext = createContext()
 //This component establishes what data can be used.
 export const CustomerProvider = (props) => {
   const [customers, setCustomers] = useState([])
+  const [customer, setCustomer] = useState({})
 
   const getCustomers = () => {
     return fetch("http://localhost:8088/customers?_embed=animals")
@@ -25,9 +26,26 @@ export const CustomerProvider = (props) => {
     .then(getCustomers)
   }
 
+  const updateCustomer = customerObj => {
+    debugger
+    return fetch(`http://localhost:8088/customers/${customerObj.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(customerObj)
+    })
+    .then(getCustomers)
+  }
+
+  const getCustomerById = customerId => {
+    return fetch(`http://localhost:8088/customers/${customerId}`)
+    .then(res => res.json())
+  }
+ 
   return (
     <CustomerContext.Provider value={{
-      customers, getCustomers, addCustomer
+      customer, customers, getCustomers, addCustomer, updateCustomer, getCustomerById
     }}>
       {props.children}
     </CustomerContext.Provider>

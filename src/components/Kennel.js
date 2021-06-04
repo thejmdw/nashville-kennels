@@ -4,6 +4,10 @@ import { ApplicationViews } from "./ApplicationViews";
 import { NavBar } from "./nav/NavBar";
 import { Login } from "./auth/Login";
 import { Register } from "./auth/Register";
+import { LocationProvider } from "./location/LocationProvider"
+import { AnimalProvider } from "./animal/AnimalProvider"
+import { CustomerProvider } from "./customer/CustomerProvider"
+import { EmployeeProvider } from "./employee/EmployeeProvider"
 import "./Kennel.css";
 
 export const Kennel = () => (
@@ -13,6 +17,7 @@ export const Kennel = () => (
         if (localStorage.getItem("kennel_customer")) {
           return (
             <>
+              
               <NavBar />
               <ApplicationViews />
             </>

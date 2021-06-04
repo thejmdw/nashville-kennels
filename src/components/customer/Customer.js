@@ -2,7 +2,7 @@ import React from "react"
 import { useContext, useEffect, useState } from "react"
 import { CustomerContext } from "./CustomerProvider"
 import "./Customer.css"
-import { useParams } from "react-router"
+import { useParams, useHistory } from "react-router-dom"
 
 export const Customer = () => {
   const { customers } = useContext(CustomerContext)
@@ -16,6 +16,8 @@ export const Customer = () => {
     setCustomer(thisCustomer)
   }, [customerId])
 
+  const history = useHistory()
+
   return (
     <section className="customer">
       <h3 className="customer__name">{customer.name}</h3>
@@ -25,6 +27,9 @@ export const Customer = () => {
           <li className="customer_animal">{animal.name}</li>
         )}
       </div>
+      <button onClick={() => {
+        history.push(`/customers/edit/${customer.id}`)
+        }}>Edit</button>
     </section>
   )
 }

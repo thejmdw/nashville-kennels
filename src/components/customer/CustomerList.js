@@ -15,7 +15,7 @@ export const CustomerList = () => {
     <section className="customers">
       {
         customers.map(customer => 
-          <div className="customer">
+          <div className="customer" key={customer.id}>
             <h3><Link to={`/customers/detail/${customer.id}`}>
             {customer.name}  
             </Link></h3>

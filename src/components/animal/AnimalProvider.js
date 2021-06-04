@@ -7,6 +7,7 @@ export const AnimalContext = createContext()
 //This component establishes what data can be used.
 export const AnimalProvider = (props) => {
   const [animals, setAnimals] = useState([])
+  const [animal, setAnimal] = useState({})
 
   const getAnimals = () => {
     return fetch("http://localhost:8088/animals?_expand=location&_expand=customer&_sort=location.id")
@@ -33,9 +34,27 @@ export const AnimalProvider = (props) => {
     .then(getAnimals)
   }
 
+  const updateAnimal = animalObj => {
+    return fetch(`http://localhost:8088/animals/${animalObj.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(animalObj)
+    })
+    .then(getAnimals)
+  }
+
+  const getAnimalById = (animalId) => {
+    return fetch(`http://localhost:8088/animals/${animalId}`)
+    .then(res => res.json())
+    // .then(setAnimal)
+  }
+
+
   return (
     <AnimalContext.Provider value={{
-      animals, getAnimals, addAnimal, releaseAnimal
+      animal, animals, getAnimals, addAnimal, releaseAnimal, updateAnimal , getAnimalById                   
     }}>
       {props.children}
     </AnimalContext.Provider>

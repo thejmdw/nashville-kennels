@@ -1,20 +1,20 @@
 import React from "react"
 import { useContext, useEffect, useState } from "react"
-import { useHistory } from "react-router-dom"
+import { useHistory, useParams } from "react-router-dom"
 import { AnimalContext } from "../animal/AnimalProvider"
 import { LocationContext } from "../location/LocationProvider"
 import { CustomerContext } from "../customer/CustomerProvider"
 import "./Animal.css"
 
 export const AnimalForm = () => {
-  const { addAnimal } = useContext(AnimalContext)
+  const { addAnimal, updateAnimal, getAnimalById } = useContext(AnimalContext)
   const { customers, getCustomers } = useContext(CustomerContext)
   const { locations, getLocations } = useContext(LocationContext)
 
   /*
   With React, we do not target the DOM events with `document.querySelector()`. 
   Instead, our return (render) reacts to state or props
-
+  
   Define the initial state of the form inputs with useState()
   */
 
@@ -25,6 +25,10 @@ export const AnimalForm = () => {
     customerId: 0
   })
 
+  const [isLoading, setIsLoading] = useState(true)
+
+  const { animalId } = useParams()
+
   const history = useHistory()
 
   /*
@@ -32,7 +36,19 @@ export const AnimalForm = () => {
   and locations state on initialization
   */
   useEffect(() => {
-    getCustomers().then(getLocations)
+    getCustomers()
+      .then(getLocations)
+        .then(() => {
+          if (animalId) {
+            getAnimalById(parseInt(animalId) )
+             .then(animal => {
+               setAnimal(animal)
+               setIsLoading(false)
+             })
+          } else {
+            setIsLoading(false)
+          }
+        })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   //When a field changes, update state. The return will re-render and display based on the values in state
@@ -49,26 +65,41 @@ export const AnimalForm = () => {
     setAnimal(newAnimal)
   }
 
-  const handleClickSaveAnimal = (e) => {
-    e.preventDefault() //Prevents the browser from submitting the form
+  const handleClickSaveAnimal = (event) => {
+    //event.preventDefault() //Prevents the browser from submitting the form
 
     const locationId = parseInt(animal.locationId)
     const customerId = parseInt(animal.customerId)
 
     if (locationId === 0 || customerId === 0) {
       window.alert("Please select a location and a customer")
-    } else {
-      //Invoke addAnimal passing the newAnimal object as an argument
-      //Once complete, change the url and display the animal list
+    } else { 
+      setIsLoading(true)
+      if (animalId) {
 
-      const newAnimal = {
-        name: animal.name,
-        breed: animal.breed,
-        locationId: locationId,
-        customerId: customerId
+        const editedAnimal = {
+          id: animal.id,
+          name: animal.name,
+          breed: animal.breed,
+          locationId: locationId,
+          customerId: customerId
+        }
+        updateAnimal(editedAnimal)
+          .then(() => history.push(`/animals/detail/${animal.id}`))
+
+      } else {
+        //Invoke addAnimal passing the newAnimal object as an argument
+        //Once complete, change the url and display the animal list
+
+        const newAnimal = {
+          name: animal.name,
+          breed: animal.breed,
+          locationId: locationId,
+          customerId: customerId
+        }
+        addAnimal(newAnimal)
+          .then(() => history.push("/animals"))
       }
-      addAnimal(newAnimal)
-        .then(() => history.push("/animals"))
     }
   }
 
@@ -113,11 +144,14 @@ export const AnimalForm = () => {
           </select>
         </div>
       </fieldset>
-      <button className="btn btn-primary" onClick={handleClickSaveAnimal}>
-        Save Animal
-      </button>
+      <button className="btn btn-primary"
+          disabled={isLoading}
+          onClick={event => {
+            event.preventDefault() // Prevent browser from submitting the form and refreshing the page
+            handleClickSaveAnimal()
+          }}>
+        {animalId ? <>Save Animal</> : <>Update Animal</>}</button>
     </form>
   )
-
 
  }
