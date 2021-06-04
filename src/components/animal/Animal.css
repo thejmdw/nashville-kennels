@@ -10,3 +10,7 @@
     padding: 1em;
     border: 1px solid goldenrod;
 }
+
+.animal__button {
+  margin: .5rem 0;
+}

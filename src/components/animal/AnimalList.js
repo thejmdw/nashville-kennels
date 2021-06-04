@@ -1,14 +1,18 @@
-import React from "react"
+import React, { useState } from "react"
 import { useContext, useEffect } from "react"
 import { AnimalContext } from "./AnimalProvider"
+import {Animal} from "./Animal"
 import { Link, useHistory, useParams } from "react-router-dom"
 import "./Animal.css"
+import { AnimalSearch } from "./AnimalSearch"
 
 export const AnimalList = () => {
   // This state changes when `getAnimals()` is invoked below
-  const { animals, getAnimals, getAnimalById } = useContext(AnimalContext)
+  const { animals, getAnimals, getAnimalById, searchTerms } = useContext(AnimalContext)
   const animalId = useParams()
 
+  const history = useHistory()
+  const [ filteredAnimals, setFilteredAnimals ] = useState([])
   //useEffect - reach out to the world for something 
   useEffect(() => {
     console.log("AnimalList: useEffect - getAnimals")
@@ -16,7 +20,18 @@ export const AnimalList = () => {
     .then(getAnimalById(animalId))
   }, [])  // eslint-disable-line react-hooks/exhaustive-deps
 
-  const history = useHistory()
+  useEffect(() => {
+    if (searchTerms !== "") {
+      
+      // If the search field is not blank, display matching animals
+      const subset = animals.filter(animal => animal.name.toLowerCase().includes(searchTerms.toLowerCase()))
+      setFilteredAnimals(subset)
+    } else {
+      // If the search field is blank, display all animals
+      setFilteredAnimals(animals)
+    }
+  }, [searchTerms, animals])
+
 
   return (
 
@@ -29,14 +44,25 @@ export const AnimalList = () => {
         Add Animal
       </button>
       
+      {/* <div className="animalSearch">
+      <AnimalSearch />
+      </div> */}
+
       <section className="animals">
         {console.log("AnimalList: Render", animals)}
         {
-          animals.map(animal => <div className="animal" key={animal.id}><h3><Link to={`/animals/detail/${animal.id}`}>
-            {animal.name}
-          </Link></h3>
-          <div><strong>Breed:</strong> {animal.breed}</div></div>
+          filteredAnimals.map(animal => {
+            {
+              return <Animal key={animal.id} animalObj={animal} />
+            }
+          }
           )
+
+
+        //   <div className="animal" key={animal.id}><h3><Link to={`/animals/detail/${animal.id}`}>
+        //   {animal.name}
+        // </Link></h3>
+        // <div><strong>Breed:</strong> {animal.breed}</div></div>
 
           // animals.map(animal => {
           //   return (
