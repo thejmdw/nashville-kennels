@@ -42,6 +42,9 @@ export const ApplicationViews = () => {
               <Route exact path="/locations/create">
                 <LocationForm />
               </Route>
+              <Route path="/locations/edit/:locationId(\d+)">
+                <LocationForm />
+              </Route>
 
               <Route exact path="/animals">
                 <AnimalList />

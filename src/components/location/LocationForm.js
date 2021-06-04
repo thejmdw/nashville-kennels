@@ -1,11 +1,11 @@
-import React, { useContext, useState } from "react"
-import { useHistory } from "react-router-dom"
+import React, { useContext, useState, useEffect } from "react"
+import { useHistory, useParams } from "react-router-dom"
 import { LocationContext } from "../location/LocationProvider"
 import "./Location.css"
 
 
 export const LocationForm = () => {
-  const { addLocation } = useContext(LocationContext)
+  const { addLocation, updateLocation, getLocationById } = useContext(LocationContext)
   
   const [ location, setLocation ] = useState({
     name: "",
@@ -14,6 +14,22 @@ export const LocationForm = () => {
 
   const history = useHistory()
 
+  const [isLoading, setIsLoading] = useState(true)
+
+  const { locationId } = useParams()
+
+  useEffect(() => {
+    if (locationId) {
+      getLocationById(parseInt(locationId))
+      .then(location => {
+        setLocation(location)
+        setIsLoading(false)
+      })
+    } else {
+      setIsLoading(false)
+    }
+  }, [])
+
   const handleControlledInputChange = e => {
     const newLocation = { ...location}
     newLocation[e.target.id] = e.target.value
@@ -21,15 +37,30 @@ export const LocationForm = () => {
   }
 
   const handleClickSaveLocation = e => {
-    e.preventDefault() 
+    // e.preventDefault() 
 
-    const newLocation = {
-        name: location.name,
-        address: location.address
-    }
-    
-    addLocation(newLocation)
-      .then(() => history.push("/Locations"))
+    setIsLoading(true)
+      if (locationId) {
+
+        const editedLocation = {
+          id: location.id,
+          name: location.name,
+          address: location.address,
+        }
+        updateLocation(editedLocation)
+          .then(() => history.push(`/locations/detail/${location.id}`))
+
+      } else {
+        //Invoke addAnimal passing the newAnimal object as an argument
+        //Once complete, change the url and display the animal list
+
+        const newLocation = {
+          name: location.name,
+          address: location.address,
+        }
+        addLocation(newLocation)
+          .then(() => history.push("/locations"))
+      }
   }
 
   return (
@@ -48,9 +79,13 @@ export const LocationForm = () => {
         </div>
       </fieldset>
       
-      <button className="btn btn-primary" onClick={handleClickSaveLocation}>
-        Save Location
-      </button>
+      <button className="btn btn-primary"
+          disabled={isLoading}
+          onClick={event => {
+            event.preventDefault() // Prevent browser from submitting the form and refreshing the page
+            handleClickSaveLocation()
+          }}>
+        {locationId ? <>Save Location</> : <>Update Location</>}</button>
     </form>
   )
 }
