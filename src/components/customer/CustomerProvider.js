@@ -27,7 +27,6 @@ export const CustomerProvider = (props) => {
   }
 
   const updateCustomer = customerObj => {
-    debugger
     return fetch(`http://localhost:8088/customers/${customerObj.id}`, {
       method: "PUT",
       headers: {
