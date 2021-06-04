@@ -32,7 +32,7 @@ export const LocationList = () => {
       {
         //locations.map(location => {
 
-          locations.map(location => <div className="location">
+          locations.map(location => <div className="location" key={location.id}>
             <h3><Link to={`/locations/detail/${location.id}`}>
               {location.name}
             </Link></h3>

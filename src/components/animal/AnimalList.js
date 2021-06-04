@@ -1,17 +1,19 @@
 import React from "react"
 import { useContext, useEffect } from "react"
 import { AnimalContext } from "./AnimalProvider"
-import { Link, useHistory } from "react-router-dom"
+import { Link, useHistory, useParams } from "react-router-dom"
 import "./Animal.css"
 
 export const AnimalList = () => {
   // This state changes when `getAnimals()` is invoked below
-  const { animals, getAnimals } = useContext(AnimalContext)
+  const { animals, getAnimals, getAnimalById } = useContext(AnimalContext)
+  const animalId = useParams()
 
   //useEffect - reach out to the world for something 
   useEffect(() => {
     console.log("AnimalList: useEffect - getAnimals")
     getAnimals()
+    .then(getAnimalById(animalId))
   }, [])  // eslint-disable-line react-hooks/exhaustive-deps
 
   const history = useHistory()
@@ -30,7 +32,7 @@ export const AnimalList = () => {
       <section className="animals">
         {console.log("AnimalList: Render", animals)}
         {
-          animals.map(animal => <div className="animal"><h3><Link to={`/animals/detail/${animal.id}`}>
+          animals.map(animal => <div className="animal" key={animal.id}><h3><Link to={`/animals/detail/${animal.id}`}>
             {animal.name}
           </Link></h3>
           <div><strong>Breed:</strong> {animal.breed}</div></div>

@@ -26,7 +26,7 @@ export const EmployeeList = () => {
 
       <section className="Employees">
         {
-          employees.map(employee => <div className="employee"><h3><Link to={`/employees/detail/${employee.id}`}>
+          employees.map(employee => <div className="employee" key={employee.id}><h3><Link to={`/employees/detail/${employee.id}`}>
             {employee.name}</Link></h3></div>)
         }
       </section>
